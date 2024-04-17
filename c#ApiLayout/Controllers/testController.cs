@@ -11,22 +11,24 @@ namespace c_ApiLayout.Controllers
     {
         private readonly IMongoCollection<BsonDocument> _testCollection;
         private readonly IConfiguration _configuration;
-
         public apiLayoutController(IConfiguration configuration, IMongoClient mongoClient)
         {
             _configuration = configuration;
 
             var client = mongoClient;
-            var userDatabase = client.GetDatabase("databaseName");
-            _testCollection = userDatabase.GetCollection<BsonDocument>("collectionName");
+            var userDatabase = client.GetDatabase("test");
+            _testCollection = userDatabase.GetCollection<BsonDocument>("users");
         }
 
         [HttpPost("testDtoEndpoint")]
         public IActionResult dtoEndpoint([FromBody] UserDto userForm)
         {
             string username = userForm.username;
-            Log.LogEvent(_testCollection, username);
-            return Ok(username);
+            string password = userForm.password;
+            Log.LogEvent(_testCollection, username, password);
+            var ting = username + ":" + password;
+            return Ok(ting);
         }
+      
     }
 }
